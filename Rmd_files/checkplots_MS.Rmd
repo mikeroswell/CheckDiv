@@ -47,33 +47,68 @@ Specifically, we ask
 ## STATISTICAL BACKGROUND
 
 ### p-values
-We define a p-value to be the probability of a particular observation (or one that is more extreme), given that a particular statistical hypothesis is true.
+We define a p-value to be the probability of a particular observation (or one
+that is more extreme), given that a particular statistical hypothesis is true.
 
-Formally, we define the one-tailed p-value for an observation $x$ and the statistical hypothesis $\Theta$ as $p_{\Theta}(x|\Theta)$\; the probability of observing a parameter as or more extreme than $x$, and define 1-tailed p-values as
+Formally, we define the one-tailed p-value for an observation $x$ and the
+statistical hypothesis $\Theta$ as $p_{\Theta}(x|\Theta)$\; the probability of
+observing a parameter as or more extreme than $x$, and define 1-tailed p-values
+as
 $$p^{-}_{\Theta}=P(X\leq x|\Theta)$$ and 
 $$p^{+}_{\Theta}=P(X\geq x|\Theta)$$
 
 where $X$ is a random variable, and $\Theta$ describes the statistical hypothesis.
 
-p-values describe an observation $x$ in terms of the quantiles of a random variable. If $\Theta$ is true, and $X$ is a continuous random variable, then the probability density function of $p_{\Theta}(X)$ is uniform on  $[0,1]$, by the probability integral transform (Casella and Berger 2002).  
+p-values describe an observation $x$ in terms of the quantiles of a random
+variable. If $\Theta$ is true, and $X$ is a continuous random variable, then the
+probability density function of $p_{\Theta}(X)$ is uniform on  $[0,1]$, by the
+probability integral transform (Casella and Berger 2002).
 
-If $X$ is a discrete random variable, however, $p_{\Theta^{-}}$ is not always equal to $1-p_{\Theta^{+}}$. When for $x\in{X}$, $p^{+}_{\Theta}(x) \neq 1-p^{-}_{\Theta}(x)$, $p_{\Theta}(x)$ is associated, in theory, with a range of “platonic” p-values between $p^{+}_{\Theta}$ and $p^{-}_{\Theta}$ ^[How can we cite and/or better explain this assertion?]. When using p-values to construct confidence intervals or evaluate statistical hypotheses, it is prudent to be conservative, i.e. select only   $p^{+}_{\Theta}$ or $p^{-}_{\Theta}$, in accordance with the tail appropriate for a given hypothesis. When evaluating a p-value, it can be informative break the tie not by selecting the most conservative p-value associated with $x$, but instead by randomly sampling the range of p-values consistent with $x$. p-values estimated this way, even for discrete random variables, always have a discrete uniform distribution on  $[0,1]$. 
+If $X$ is a discrete random variable, however, $p_{\Theta^{-}}$ is not always
+equal to $1-p_{\Theta^{+}}$. When for $x\in{X}$, $p^{+}_{\Theta}(x) \neq
+1-p^{-}_{\Theta}(x)$, $p_{\Theta}(x)$ is associated, in theory, with a range of
+“platonic” p-values between $p^{+}_{\Theta}$ and $p^{-}_{\Theta}$ ^[How can we
+cite and/or better explain this assertion?]. When using p-values to construct
+confidence intervals or evaluate statistical hypotheses, it is prudent to be
+conservative, i.e. select only   $p^{+}_{\Theta}$ or $p^{-}_{\Theta}$, in
+accordance with the tail appropriate for a given hypothesis. When evaluating a
+p-value, it can be informative break the tie not by selecting the most
+conservative p-value associated with $x$, but instead by randomly sampling the
+range of p-values consistent with $x$. p-values estimated this way, even for
+discrete random variables, always have a discrete uniform distribution on
+$[0,1]$.
 
 ### What are confidence intervals for?
 
-A frequentist confidence interval (CI) with confidence level $L$ is an interval estimate obtained by a method that is expected to result in the interval containing the true value a proportion $L$ of the time no matter what the true value is (Cox and Hinkley 1974, Casella and Berger 2002). 
-CIs are commonly constructed as a collection of values that would not be rejected (at an aggregate p-value of $\alpha=1-L$) if they were treated as null hypotheses (Neyman 1937). In other words, We construct CIs using a counterfactual null hypothesis: a value falls within the CI if, imagining that that value were the true parameter value under the null hypothesis, the null hypothesis would not be rejected for the observed statistic.
+A frequentist confidence interval (CI) with confidence level $L$ is an interval
+estimate obtained by a method that is expected to result in the interval
+containing the true value a proportion $L$ of the time no matter what the true
+value is (Cox and Hinkley 1974, Casella and Berger 2002). CIs are commonly
+constructed as a collection of values that would not be rejected (at an
+aggregate p-value of $\alpha=1-L$) if they were treated as null hypotheses
+(Neyman 1937). In other words, We construct CIs using a counterfactual null
+hypothesis: a value falls within the CI if, imagining that that value were the
+true parameter value under the null hypothesis, the null hypothesis would not be
+rejected for the observed statistic.
 
-Frequentist confidence intervals are commonly used to express the range of population parameter values that are consistent with the data. Thus, when valid confidence intervals can be found, they provide practical guidance about uncertainty. 
+Frequentist confidence intervals are commonly used to express the range of
+population parameter values that are consistent with the data. Thus, when valid
+confidence intervals can be found, they provide practical guidance about
+uncertainty.
 
 ### Defining confidence intervals
 
-A confidence interval denotes two limits (though one may be infinite), $l$ and $u$, such that there is at least a  $(1-\alpha)*100\%$ chance of randomly drawing a sample where $[l, u]$, computed for that sample, contains the true parameter value $\Theta$. 
+A confidence interval denotes two limits (though one may be infinite), $l$ and
+$u$, such that there is at least a  $(1-\alpha)*100\%$ chance of randomly
+drawing a sample where $[l, u]$, computed for that sample, contains the true
+parameter value $\Theta$.
 
 
-$\Theta \in [l,u]$ if the statistic we observe based on the sample, $\hat{X}$, wouldn’t be surprising, given that $\Theta$ is the true parameter value. 
+$\Theta \in [l,u]$ if the statistic we observe based on the sample, $\hat{X}$,
+wouldn’t be surprising, given that $\Theta$ is the true parameter value.
 
-$l$ is the lower bound when it is the minimum value satisfying $P(X \geq \hat X|\Theta = l) \geq a$, and $u$ is the upper bound when it is the maximum value
+$l$ is the lower bound when it is the minimum value satisfying $P(X \geq \hat
+X|\Theta = l) \geq a$, and $u$ is the upper bound when it is the maximum value
 satisfying $P(X \leq \hat X|\Theta = u) \geq b$;  $a+b = \alpha$
 
 
@@ -182,7 +217,6 @@ knitr::include_graphics("figures/conceptual_checkplot.pdf")
 ```
 
 
-
 Checkplots can reveal how approximated confidence intervals or p-values may
 provide misleading statistical guidance (“How to interpret a p-value histogram”
 in press, Hamill 2001, Talts et al. 2018). Humped, centered checkplots imply
@@ -197,6 +231,39 @@ Alternatively, the flatness of a checkplot might be assessed with a Chi-squared
 test (Wilks 2019). When developing or comparing approximated p-values, these
 nuanced diagnostics enable assessing CI performance beyond the simple
 statistical coverage probability (Fig 3).
+
+```{r generate data, eval = F}
+
+set.seed(7082)
+numSims <- 5e3
+n <- 100
+#for binomial
+prob <- 0.97
+
+# for normal
+mu<-22
+sd<-4
+
+## Sim
+datNorm<-map_dfr(c(11,15,22,36), function(mymean){
+    map_dfr(1:numSims, function(x){
+      data.frame(mu=mymean, t(rnorm(n, mean=mymean, sd)))
+      })
+})
+
+#make output with binom.test
+
+################
+# make a big dataframe with different probs and 
+to_checkplot<-map_dfr(c(0.5, 0.75, 0.9, 0.97), function(prob){
+  dat <- rbinom(numSims, n, prob)
+  k<-map_dfr(c("binom.test",  "wald"), function(testv){
+   data.frame( multBinom(dat=dat, prob=prob, n=n, testv=testv), testv, prob)
+    
+  })
+  return(k)
+})
+```
 
 ```{r Fig 3 demo checkplots, eval = F}
 "Figure 3. Checkplots for p-values and their associated CIs for samples from a univariate normal distribution (based on Student’s  t-statistics) and for samples from a binomial distribution (based on Wald and exact statistics) reveal the validity of each statistic and their associated CI (a) Confidence intervals for the true mean of sample from a normal distribution may be constructed by inverting a t-test, taking the sample mean as the \“null hypothesis.\” Therefore$p(  \mu<\hat{\mu} )$ , where $ \hat{\mu}$ is the sample mean, from 50,000 samples of 100 random deviates from a normal distribution with $\mu=22$ and $\sigma=4$, falls uniformly across $[0,1]$, generating a flat checkplot. (b) The Wald binomial test and associated confidence interval depend on the discrete binomial distribution converging on a continuous chi-squared distribution, which occurs asymptotically. However, at smaller sample sizes, the approximation can be poor (Brown et al. 2001). When the binomial proportion is close to 0.5, the Wald confidence intervals are conservative. The p-values for the true proportion, taking the sample proportion as the null, from 50,000 samples of 100 random Bernoulli trials with frequency of success = 0.5 is not uniform, and the checkplot shows a higher density of nominal p-values near 0.5. With more extreme binomial proportions, the Wald intervals become biased towards 0.5, and the checkplots show a high density p-values >0.95 (c-e). In addition to providing a misleading interval, the Wald statistic depends on which condition a researcher determines to be “success.” The inverse $\beta$ distribution is used to estimate p-values for a binomial distribution in the exact binomial test and Clopper-Pearson interval (f-i). Due to the discreteness of the binomial distribution, we randomly sample from the interval $[p^{-}_{\Theta}, 1-p^{+}_{\Theta}]$ to simulate a “platonic” p-value for each sample. The exact binomial test delivers valid p-values, and therefore a flat checkplot can be made for any binomial proportion. The Clopper-Pearson interval is constructed from inverting the exact binomial test (using the observed frequency as the null), and is therefore also valid."
