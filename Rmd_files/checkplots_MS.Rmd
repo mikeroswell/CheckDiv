@@ -57,7 +57,7 @@ where $X$ is a random variable, and $\Theta$ describes the statistical hypothesi
 
 p-values describe an observation $x$ in terms of the quantiles of a random variable. If $\Theta$ is true, and $X$ is a continuous random variable, then the probability density function of $p_{\Theta}(X)$ is uniform on  $[0,1]$, by the probability integral transform (Casella and Berger 2002).  
 
-If $X$ is a discrete random variable, however, $p_{\Theta^{-}}$ is not always equal to $1-p_{\Theta^{+}}$. When for $x\in{X}$, $p^{+}_{\Theta}(x) \neq 1-p^{-}_{\Theta}(x)$, $p_{\Theta}(x)$ is associated, in theory, with a range of “platonic” p-values between $p^{+}_{\Theta}$ and $p^{-}_{\Theta}$ **(How can we cite and/or better explain this assertion??)**. When using p-values to construct confidence intervals or evaluate statistical hypotheses, it is prudent to be conservative, i.e. select only   $p^{+}_{\Theta}$ or $p^{-}_{\Theta}$, in accordance with the tail appropriate for a given hypothesis. When evaluating a p-value, it can be informative break the tie not by selecting the most conservative p-value associated with $x$, but instead by randomly sampling the range of p-values consistent with $x$. p-values estimated this way, even for discrete random variables, always have a discrete uniform distribution on  $[0,1]$. 
+If $X$ is a discrete random variable, however, $p_{\Theta^{-}}$ is not always equal to $1-p_{\Theta^{+}}$. When for $x\in{X}$, $p^{+}_{\Theta}(x) \neq 1-p^{-}_{\Theta}(x)$, $p_{\Theta}(x)$ is associated, in theory, with a range of “platonic” p-values between $p^{+}_{\Theta}$ and $p^{-}_{\Theta}$ ^[How can we cite and/or better explain this assertion?]. When using p-values to construct confidence intervals or evaluate statistical hypotheses, it is prudent to be conservative, i.e. select only   $p^{+}_{\Theta}$ or $p^{-}_{\Theta}$, in accordance with the tail appropriate for a given hypothesis. When evaluating a p-value, it can be informative break the tie not by selecting the most conservative p-value associated with $x$, but instead by randomly sampling the range of p-values consistent with $x$. p-values estimated this way, even for discrete random variables, always have a discrete uniform distribution on  $[0,1]$. 
 
 ### What are confidence intervals for?
 
@@ -89,6 +89,10 @@ $p_{\Theta}(x)=\alpha/{2}$ may be computationally or conceptually infeasible. A
 simpler approach is to assume a kind of symmetry such that
 $p_{\Theta_{y}}(x)=p_{\Theta_{x}}(y)$, where $\Theta_{x}$ indicates that $x$ is
 the true value of the parameter of interest under the statistical hypothesis.
+^[there's probably more to say about this. e.g. This assumption is implicitly
+true in certain problems in classical statistics (e.g. the location of a mean in
+a normal distribution with known variance). It seems generally like a bad
+assumption to me, so maybe we shoudl justify it or explain it in greater depth]
 
 Because a valid confidence interval depends on a sound method to estimate
 p-values (in order to conduct the counterfactual null hypothesis test), to test
