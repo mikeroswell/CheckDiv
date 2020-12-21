@@ -7,8 +7,12 @@ output:
   html_document: default
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r setup, include=T}
+knitr::opts_chunk$set(echo = F)
+
+library(checkPlotR)
+library(tidyverse)
+library(purrr)
 ```
 
 ## Abstract
@@ -154,9 +158,6 @@ statistics but may be difficult to interpret for discrete statistics.
 
 ```{r slugplot example, fig.cap = "Figure 1. A slugplot for 95% CIs based on Student’s t- type p-values, constructed for 1000 samples of 100 deviates from a normal distribution with mean= 22, standard deviation = 4. The slugplot exhibits near ideal behavior of these CIs, with 2.5% of CIs too low (red, at left) and 2.5% too high (red, at right). The point estimate for the mean for each sample is a darker shade for each CI."}
 
-library(checkPlotR)
-library(tidyverse)
-library(purrr)
 
 # set some params for simulations
 set.seed(7082)
@@ -213,7 +214,7 @@ valid p-value always has a flat checkplot.
  
 ```{r demo checkplots, echo=F, fig.cap="Fig 2. Checkplots can reveal accuracy, bias, and conservatism of a proposed p-value or confidence interval. a) an ideal checkplot has a uniform, unbroken distribution across all nominal p-values. b) checkplot with higher density around p=0.5, implying conservative confidence intervals c) Checkplot with low nominal p-values occurring more frequently than higher nominal p-values, implying biased, anti-conservative confidence intervals d) Checkplot with high density towards extreme p-values implies anti-conservative confidence intervals.", out.width = '100%'}
 
-knitr::include_graphics("figures/conceptual_checkplot.pdf")
+knitr::include_graphics(paste0(getwd(), "figures/conceptual_checkplot.png"), error = F)
 ```
 
 
