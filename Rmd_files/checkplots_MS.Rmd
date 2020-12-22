@@ -214,7 +214,7 @@ valid p-value always has a flat checkplot.
  
 ```{r demo checkplots, echo=F, fig.cap="Fig 2. Checkplots can reveal accuracy, bias, and conservatism of a proposed p-value or confidence interval. a) an ideal checkplot has a uniform, unbroken distribution across all nominal p-values. b) checkplot with higher density around p=0.5, implying conservative confidence intervals c) Checkplot with low nominal p-values occurring more frequently than higher nominal p-values, implying biased, anti-conservative confidence intervals d) Checkplot with high density towards extreme p-values implies anti-conservative confidence intervals.", out.width = '100%'}
 
-knitr::include_graphics(paste0(getwd(), "figures/conceptual_checkplot.png"), error = F)
+knitr::include_graphics(paste0(getwd(), "/figures/conceptual_checkplot.png"), error = F)
 ```
 
 
