@@ -12,6 +12,12 @@ vim_session:
 
 ## figures/ LICENSE Makefile README.md Rmd_files/
 
+## mkdir ~/Dropbox/CheckDiv ##
+## ln -s ~/Dropbox/CheckDiv drop
+
+drop/giantProgram.Rout: giantProgram.R
+	$(pipeR)
+
 ######################################################################
 
 ### Makestuff
@@ -33,7 +39,7 @@ makestuff/Makefile:
 
 -include makestuff/os.mk
 
-## -include makestuff/makeR.mk
+-include makestuff/pipeR.mk
 
 -include makestuff/git.mk
 -include makestuff/visual.mk
