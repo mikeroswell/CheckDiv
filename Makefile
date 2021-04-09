@@ -12,10 +12,18 @@ vim_session:
 
 ## figures/ LICENSE Makefile README.md Rmd_files/
 
+## Commands for setup (you can customize)
 ## mkdir ~/Dropbox/CheckDiv ##
-## ln -s ~/Dropbox/CheckDiv drop
+## ln -s ~/Dropbox/CheckDiv drop ##
 
+Sources += $(wildcard *.R)
+
+## An example of how make might save and read a giant file (giantProgram.rds)
+Ignore += drop
 drop/giantProgram.Rout: giantProgram.R
+	$(pipeR)
+
+newProgram.Rout: drop/giantProgram.rds newProgram.R
 	$(pipeR)
 
 ######################################################################
