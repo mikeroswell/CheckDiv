@@ -26,6 +26,8 @@ drop/giantProgram.Rout: giantProgram.R
 newProgram.Rout: drop/giantProgram.rds newProgram.R
 	$(pipeR)
 
+## <C-F3>Rmd_files/checkplots_MS.Rmd Rmd_files/checkplots_MS.Rmd
+
 ######################################################################
 
 ### Makestuff
