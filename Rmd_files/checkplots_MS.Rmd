@@ -4,7 +4,9 @@ author: "Michael Roswell, Michael Li, Rachael Winfree, Jonathan Dushoff"
 date: "11/6/2020"
 output:
   pdf_document: default
+    pandoc_args: ["-Fpandoc-crossref"]
   html_document: default
+    pandoc_args: ["-Fpandoc-crossref"]
 ---
 
 ```{r setup, include = F}
