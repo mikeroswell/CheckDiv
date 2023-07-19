@@ -1,3 +1,4 @@
+remotes::install_github("dushoff/checkPlots")
 library(checkPlotR)
 library(dplyr)
 library(ggplot2)
@@ -76,12 +77,12 @@ normtests<- map_dfr(1:length(datNorm$mu), function(samp){
 ######
 # some tests to determine how many reps is nice for checkplots
 
-# pdf("figures/norm_22_4.pdf", width=4, height=3)
+pdf("figures/norm_22_4.pdf", width=4, height=3)
 checkPlot(normtests)+
   theme_classic()
-# dev.off()
+dev.off()
 
-# png("figures/example_normal_slugplot_22_4.png", width=4, height=3, units="in", res=650)
+png("figures/example_normal_slugplot_22_4.png", width=4, height=3, units="in", res=650)
 rangePlot(normtests, title="slugplot: \nCIs for true mean  based on 100 deviates \nfrom norm(22,4)")
 dev.off()
 
