@@ -61,7 +61,7 @@ People should think about this stuff more. To help them, we created checkPlots,
 and an R package to make them. The R package makes the plots, but leaves the
 p-value/ CI simulations to the user.
 
-```{r checkPlotR}
+```{r checkPlotR, echo= FALSE}
 #install and load relevant libraries
 remotes::install_github("dushoff/checkPlots")
 library(checkPlotR)
