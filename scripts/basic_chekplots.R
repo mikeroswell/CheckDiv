@@ -21,9 +21,9 @@ datNorm<-map_dfr(c(11,15,22,36), function(mymean){
 })
 
 # binomial simulation
-to_checkplot<-map_dfr(c(0.5, 0.75, 0.85, 0.9, 0.97), function(prob){
+to_checkplot <- map_dfr(c(0.5, 0.75, 0.85, 0.9, 0.97), function(prob){
   dat <- rbinom(numSims, n, prob)
-  k<-map_dfr(c("binom.test", "chisq"), function(testv){
+  k<-map_dfr(c("binom.test", "chisq", "wald"), function(testv){
     data.frame(multBinom(
       dat = dat, prob = prob, n = n, testv = testv)
       , testv
@@ -37,12 +37,13 @@ to_checkplot<-map_dfr(c(0.5, 0.75, 0.85, 0.9, 0.97), function(prob){
 # plots
 
 to_checkplot <- to_checkplot %>% 
-  mutate(testv=factor(c("Clopper-Pearson exact", "chi squared")[as.numeric(as.factor(testv))]
-                      , levels=c("Clopper-Pearson exact", "chi squared")))
+  mutate(testv=factor(c("Clopper-Pearson exact", "chi squared", "Wald")[as.numeric(as.factor(testv))]
+                      , levels=c("Clopper-Pearson exact", "chi squared", "Wald")))
 
 pdf("figures/tie_breaking.pdf", height=6, width = 11)
-checkPlot(to_checkplot
-          , facets = 10)+
+checkPlot(to_checkplot %>% 
+            filter(testv = "Clopper-Pearson exact")
+          , facets = 5)+
   facet_grid(testv~prob, scales="free_y")+
   labs(x="nominal p-value", main = "uniform tie-breaking")+
   scale_x_continuous(expand=c(0,0)) +
@@ -52,8 +53,8 @@ checkPlot(to_checkplot
 
 to_checkplot_lower <- to_checkplot %>% mutate(p = cp)
 
-checkPlot(to_checkplot_lower
-          , facets = 10)+
+checkPlot(to_checkplot_lower %>% 
+          , facets = 15)+
   facet_grid(testv~prob, scales="free_y")+
   labs(x="nominal p-value", title = "conservative tie-breaking \n(less than)")+
   scale_x_continuous(expand=c(0,0)) +
@@ -101,3 +102,33 @@ dev.off()
 # print(rangePlot(testchisq, orderFun=blob, opacity=0.02))
 # print(rangePlot(testjd, orderFun=blob, opacity=0.02))
 # print(rangePlot(testwald, orderFun=blob, opacity=0.02))
+
+
+# Bolker example of how Wald tests (which glm uses with family = binomial) can 
+# test of any proportion
+set.seed(2)
+n <- 100
+size <- 1
+p <- 0.5
+prob0 <- 0.5
+reps <- 1e4
+make.p <- function(n, size, p, prob0){
+  x = rbinom(n, size, p)
+  dd = data.frame(x, q = qlogis(prob0)) 
+  p.val = summary(glm(x ~ 1 + offset(q), data=dd, family = "binomial"))$coefficients[4]
+  return(p.val)
+}
+
+p.vec <- map_dfr(1:reps, function(rep){
+  p.val <- make.p(n, size, p, prob0)
+  return(data.frame(p.val))
+})
+
+p.vec %>% mutate(p=p.val) %>%  checkPlot()     
+
+p.vec <- map_dfr(1:reps, function(rep){
+  p.val <- 1-make.p(n, size, p, prob0)
+  return(data.frame(p.val))
+})
+p.vec %>% mutate(p=p.val) %>% checkPlot()                 
+
