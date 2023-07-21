@@ -1,0 +1,181 @@
+---
+title: "Piano_plot_notes_July_2023"
+author: "Michael Roswell"
+date: "2023-07-20"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Basics: Defining frequentist p-values
+We define a p-value to be the probability of a particular observation (or one
+that is more extreme), given that a particular statistical hypothesis is true.
+
+Formally, we define the one-tailed p-value for an observation $x$ and the
+statistical hypothesis $\Theta$ as $p_{\Theta}(x|\Theta)$\; the probability of
+observing a parameter as or more extreme than $x$, and define 1-tailed p-values
+as
+$$p^{-}_{\Theta}=P(X\leq x|\Theta)$$ and 
+$$p^{+}_{\Theta}=P(X\geq x|\Theta)$$
+
+where $X$ is a random variable, and $\Theta$ describes the statistical
+hypothesis.
+
+p-values describe an observation $x$ in terms of the quantiles of a random
+variable. If $\Theta$ is true, and $X$ is a continuous random variable, then the
+probability density function of $p_{\Theta}(X)$ is uniform on  $[0,1]$, by the
+probability integral transform (Casella and Berger 2002).
+
+If $X$ is a discrete random variable, however, $p_{\Theta^{-}}$ is not always
+equal to $1-p_{\Theta^{+}}$. When for $x\in{X}$, $p^{+}_{\Theta}(x) \neq
+1-p^{-}_{\Theta}(x)$, $p_{\Theta}(x)$ is associated, in theory, with a range of
+“platonic” p-values between $p^{+}_{\Theta}$ and $p^{-}_{\Theta}$ ^[How can we
+cite and/or better explain this assertion?]. When using p-values to construct
+confidence intervals or evaluate statistical hypotheses, it is prudent to be
+conservative, i.e. select only   $p^{+}_{\Theta}$ or $p^{-}_{\Theta}$, in
+accordance with the tail appropriate for a given hypothesis. When evaluating a
+p-value, it can be informative break the tie not by selecting the most
+conservative p-value associated with $x$, but instead by randomly sampling the
+range of p-values consistent with $x$. p-values estimated this way, even for
+discrete random variables, always have a discrete uniform distribution on
+$[0,1]$.
+
+# Twitter post prompts
+Richard McElreath posted on
+[twitter](https://twitter.com/rlmcelreath/status/1677322772719054849) how
+striking [this
+simulation](https://gist.githubusercontent.com/rmcelreath/4f7010e8d5688c69bbeb7008f0aabe65/raw/3bfde2a7d162038bf54856b649b4c268573fc061/p_under_null.r)
+was. His point was that even a continuous test statistic (like the Wald, which
+we think the GLM is using), when driven by a GLM with data that are sampled from
+a discrete enough distribution, won't generate continuous, uniform p-values
+under the null hypothesis. We think there might be ways to reformulate the
+p-value/ sampling distribution for reasonable test statistics( e.g., a Wald or
+Likelihood Ratio) so that we can get p-values that look more like true
+probabilities when data are generated under a null model/null hypothesis.
+
+# Our take: 
+
+People should think about this stuff more. To help them, we created checkPlots,
+and an R package to make them. The R package makes the plots, but leaves the
+p-value/ CI simulations to the user.
+
+```{r checkPlotR, echo= FALSE}
+#install and load relevant libraries
+remotes::install_github("dushoff/checkPlots")
+library(checkPlotR)
+library(dplyr)
+library(purrr)
+```
+
+Everyone agrees that with continuous statistics driven by continuous random
+variables, the uniform p-values should and do happen. Here's a simple example
+with a 1-sample t-test:
+
+```{r t-test simulations}
+#  generate data
+set.seed(7082)
+numSims <- 3e4
+n <- 100
+
+
+
+sd<-4
+
+## normal simulation
+datNorm<-map_dfr(c(11,15,22,36), function(mymean){
+  map_dfr(1:numSims, function(x){
+    data.frame(mu=mymean, t(rnorm(n, mean=mymean, sd)))
+  })
+})
+
+# get p-values and CI from the t distribution
+
+normtests<- map_dfr(1:length(datNorm$mu), function(samp){
+  p<-t.test(datNorm[samp, -1], mu=datNorm[samp,1], alternative="l")$p.value
+  ci<-t.test(datNorm[samp, -1], mu=datNorm[samp,1])
+  lower<-ci$conf.int[1]
+  upper<-ci$conf.int[2]
+  est<-ci$estimate
+  return(data.frame(p, lower, upper, est, tm=datNorm[samp,1]))
+})
+```
+
+We can look at the p-values from testing the null hypothesis with a "Checkplot"
+
+```{r t-test checkplot}
+checkPlot(normtests)+
+  theme_classic()
+```
+
+Things get funnier with discrete test statistics, but they are solveable. We can
+generate binomial samples and p-values based on a number of tests, such as the
+Clopper-Pearson exact test, the chi-squared test, or the Wald test.
+<!-- have to turn off warnings b.c. prop.test knows the chi-squared approximation isn't good -->
+```{r simulate binomial, warning = FALSE, message = FALSE}
+# binomial simulation
+to_checkplot <- map_dfr(c(0.5, 0.75, 0.85, 0.9, 0.97), function(prob){
+  dat <- rbinom(numSims, n, prob)
+  k<-map_dfr(c("binom.test", "chisq", "wald"), function(testv){
+    data.frame(multBinom(
+      dat = dat, prob = prob, n = n, testv = testv)
+      , testv
+      , prob)
+    
+  })
+  return(k)
+})
+
+to_checkplot <- to_checkplot %>% 
+  mutate(testv=factor(c("Clopper-Pearson exact", "chi squared", "Wald")[as.numeric(as.factor(testv))]
+                      , levels=c("Clopper-Pearson exact", "chi squared", "Wald")))
+
+```
+
+And we can look at the p-values. Here, for the Clopper-Pearson exact test we use
+1-tailed p-values, which are [intentionally] conservative.
+
+```{r jagged checkplots}
+to_checkplot_lower <- to_checkplot %>% mutate(p = cp)
+
+checkPlot(to_checkplot_lower
+          , facets = 15)+
+  facet_grid(testv~prob, scales="free_y")+
+  labs(x="nominal p-value", title = "conservative tie-breaking \n(less than)")+
+  scale_x_continuous(expand=c(0,0)) +
+  scale_y_continuous(expand=c(0,100))+
+  theme_classic() + 
+  theme(panel.spacing.x = unit(2, "lines"))
+
+```
+
+While these have the undesirable jaggedness in the distribution of p-values
+under the null, we can solve this for this simple, 1-sample case for the exact
+test. To do this we "fuzz" the p-values (and need to check out Geyer and Meedon
+2005 [ https://doi.org/10.1214/088342305000000340](
+https://doi.org/10.1214/088342305000000340) to know what "fuzzing" means in
+general)
+
+```{r smooth binomial checkplot}
+checkPlot(to_checkplot %>% 
+            filter(testv == "Clopper-Pearson exact")
+          , facets = 5)+
+  facet_grid(testv~prob, scales="free_y")+
+  labs(x="nominal p-value", main = "uniform tie-breaking")+
+  scale_x_continuous(expand=c(0,0)) +
+  scale_y_continuous(expand=c(0,100))+
+  theme_classic() + 
+  theme(panel.spacing.x = unit(2, "lines"))
+```
+
+But it's not as obvious how we might do something similar in the more complex
+case where we're interested in p-values for GLM parameters, as in a typical Wald
+test or Likelihood Ratio Test (and this is what McElreath was writing about in
+the first place).
+
+We left this wondering if there were permutation-based tools to get better Wald
+or LR test statistics (like 1-sided p-values in exact tests) for something
+complicated but useful like a GLM, where the sampling distribution of the
+parameter of interest might be hard to know (it's not chi-squared or z, nor is
+it binomial or multinomial exactly).
