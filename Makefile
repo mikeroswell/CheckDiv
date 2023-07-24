@@ -29,6 +29,9 @@ newProgram.Rout: drop/giantProgram.rds newProgram.R
 Rmd_files/checkplots_MS.html: Rmd_files/checkplots_MS.Rmd
 	$(rmdh_r)
 
+Rmd_files/checkPlot_notes.html: Rmd_files/checkPlot_notes.Rmd
+	$(rmdh_r)
+
 ######################################################################
 
 ### Makestuff
