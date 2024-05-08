@@ -26,6 +26,12 @@ drop/giantProgram.Rout: giantProgram.R
 newProgram.Rout: drop/giantProgram.rds newProgram.R
 	$(pipeR)
 
+Rmd_files/checkplots_MS.html: Rmd_files/checkplots_MS.Rmd
+	$(rmdh_r)
+
+Rmd_files/checkPlot_notes.html: Rmd_files/checkPlot_notes.Rmd
+	$(rmdh_r)
+
 ######################################################################
 
 ### Makestuff
@@ -47,6 +53,7 @@ makestuff/Makefile:
 
 -include makestuff/os.mk
 
+-include makestuff/rmd.mk
 -include makestuff/pipeR.mk
 
 -include makestuff/git.mk
