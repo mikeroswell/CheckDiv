@@ -1,4 +1,5 @@
 ## This is CheckDiv; the checkplots MS repo
+https://mikeroswell.github.io/CheckDiv
 
 current: target
 -include target.mk
