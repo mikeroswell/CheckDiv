@@ -29,7 +29,7 @@ drop/giantProgram.Rout: giantProgram.R
 newProgram.Rout: drop/giantProgram.rds newProgram.R
 	$(pipeR)
 
-## This does not work because of file-reference problems! notes.md
+## This does not work because of file-reference problems! SEE notes.md
 ## html seems ok for now, though
 Rmd_files/checkplots_MS.pdf: Rmd_files/checkplots_MS.Rmd
 	$(rmdp_r)
