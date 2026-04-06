@@ -4,9 +4,7 @@ author: "Michael Roswell, Michael Li, Rachael Winfree, Jonathan Dushoff"
 date: "11/6/2020"
 output:
   pdf_document: default
-    pandoc_args: ["-Fpandoc-crossref"]
   html_document: default
-    pandoc_args: ["-Fpandoc-crossref"]
 ---
 
 ```{r setup, include = F}
@@ -18,34 +16,104 @@ library(purrr)
 ```
 
 ## Abstract
-1.	Ecologists frequently measure and compare quantities, such as Hill diversity, for which parametric uncertainty estimates are unknown or invalid. Approximate uncertainty estimates may be generated through Monte-Carlo resampling schemes such as bootstrapping.  However, the bootstrapping simulation may not realize the variability in ecological metrics that occurs under random sampling of natural communities. 
+1.	Ecologists frequently measure and compare quantities, such as Hill diversity,
+for which parametric uncertainty estimates are unknown or invalid. Approximate
+uncertainty estimates may be generated through Monte-Carlo resampling schemes
+such as bootstrapping.  However, the bootstrapping simulation may not realize
+the variability in ecological metrics that occurs under random sampling of
+natural communities.
 
-1.	We simulated species abundance distributions with known diversity, and then sampled from them to evaluate the sampling uncertainty in Hill diversity. We then assessed whether recently proposed confidence intervals for Hill diversity estimates were valid, using two new visual diagnostic tools, the “slugplot” and the “checkplot.”
+1.	We simulated species abundance distributions with known diversity, and then
+sampled from them to evaluate the sampling uncertainty in Hill diversity. We
+then assessed whether recently proposed confidence intervals for Hill diversity
+estimates were valid, using two new visual diagnostic tools, the “slugplot” and
+the “checkplot.”
 
-1.	We found that observed Hill-Simpson diversity had high sampling uncertainty even with large samples, in comparison to Hill-Shannon diversity and richness. Similarly, asymptotic Hill-Simpson diversity estimators often had higher variability than asymptotic  Hill-Shannon diversity and asymptotic richness estimators, though both of these are more sensitive to rare species. The proposed confidence intervals often performed well for sample diversity, especially for more even communities. Only with very large samples could proposed confidence intervals obtain nominal coverage for asymptotic Hill-Shannon and Hill-Simpson estimators; the proposed confidence intervals performed poorly for the Chao1 richness estimator. 
+1.	We found that observed Hill-Simpson diversity had high sampling uncertainty
+even with large samples, in comparison to Hill-Shannon diversity and richness.
+Similarly, asymptotic Hill-Simpson diversity estimators often had higher
+variability than asymptotic  Hill-Shannon diversity and asymptotic richness
+estimators, though both of these are more sensitive to rare species. The
+proposed confidence intervals often performed well for sample diversity,
+especially for more even communities. Only with very large samples could
+proposed confidence intervals obtain nominal coverage for asymptotic
+Hill-Shannon and Hill-Simpson estimators; the proposed confidence intervals
+performed poorly for the Chao1 richness estimator.
 
-1.	Rough estimates of relative sampling uncertainty can help guide ecologists choice of which Hill diversity to use. We found that Hill-Simpson diversity, which can be estimated with little bias, often has greater sampling uncertainty than Hill-Shannon and in some cases, richness. Slugplots and checkplots are flexible tools for assessing confidence intervals and related statistics. We showed that proposed confidence intervals may work well for sample Hill diversities, but not for asymptotic Hill diversity estimates.  
+1.	Rough estimates of relative sampling uncertainty can help guide ecologists
+choice of which Hill diversity to use. We found that Hill-Simpson diversity,
+which can be estimated with little bias, often has greater sampling uncertainty
+than Hill-Shannon and in some cases, richness. Slugplots and checkplots are
+flexible tools for assessing confidence intervals and related statistics. We
+showed that proposed confidence intervals may work well for sample Hill
+diversities, but not for asymptotic Hill diversity estimates.
 
 
 ## Introduction
 
-Ecologists lack precise, robust, unbiased tools to estimate the species diversity of a community based on the diversity of samples drawn from it (Haegeman et al. 2013). While ecologists know this, do they know how accurately they can estimate diversity indices? The literature conveys that richness is very hard to estimate robustly, that Simpson’s index and its Hill-number version can be estimated with little bias from samples of nearly any size, and that Shannon’s entropy and its Hill number equivalent fall somewhere in between (Beck and Schwanghart 2010, Chase and Knight 2013, Haegeman et al. 2013, Chao and Jost 2015). In spite of these observations, we believe that ecologists often lack intuition for how accurate and precise commonly used diversity estimates are. We suspect that ecologists tend to overestimate their ability to precisely estimate true species richness and true Hill-Simpson diversity, but underestimate their ability to describe the statistical uncertainty in the expected richness of a finite sample. As the field coalesces around the consensus that Hill diversities (eq. 1) are the best family of metrics for measuring and comparing species diversity, identifying methods to quantify the uncertainty in Hill diversity estimates becomes more important (Willis 2019).
+Ecologists lack precise, robust, unbiased tools to estimate the species
+diversity of a community based on the diversity of samples drawn from it
+(Haegeman et al. 2013). While ecologists know this, do they know how accurately
+they can estimate diversity indices? The literature conveys that richness is
+very hard to estimate robustly, that Simpson’s index and its Hill-number version
+can be estimated with little bias from samples of nearly any size, and that
+Shannon’s entropy and its Hill number equivalent fall somewhere in between (Beck
+and Schwanghart 2010, Chase and Knight 2013, Haegeman et al. 2013, Chao and Jost
+2015). In spite of these observations, we believe that ecologists often lack
+intuition for how accurate and precise commonly used diversity estimates are. We
+suspect that ecologists tend to overestimate their ability to precisely estimate
+true species richness and true Hill-Simpson diversity, but underestimate their
+ability to describe the statistical uncertainty in the expected richness of a
+finite sample. As the field coalesces around the consensus that Hill diversities
+(eq. 1) are the best family of metrics for measuring and comparing species
+diversity, identifying methods to quantify the uncertainty in Hill diversity
+estimates becomes more important (Willis 2019).
 
 We define Hill diversity $D$ as the mean species rarity in the community
 $$D=\left( \sum_{i=1}^{S}p_{i}(r_{i})^{\ell} \right)^{1/\ell}$$ 
 
-where $D$ is diversity or mean rarity, $p_{i}$ is the relative abundance of species $i$, $r_{i}$ is the rarity of species $i$ (defined as the reciprocal of $p_{i}$), $S$ is the total species richness, and $\ell$ is the scaling exponent that determines the type of mean computed (Roswell et al. ND)
+where $D$ is diversity or mean rarity, $p_{i}$ is the relative abundance of
+species $i$, $r_{i}$ is the rarity of species $i$ (defined as the reciprocal of
+$p_{i}$), $S$ is the total species richness, and $\ell$ is the scaling exponent
+that determines the type of mean computed (Roswell et al. ND)
 
-Quantitative measures of the statistical uncertainty in estimates of Hill diversity ($D$)  are technically difficult to produce, and furthermore, the existing tools rely on a variety of statistical approaches with incompatible interpretations. Thus, while a number of recent publications provide quantitative interval estimates for community diversity (Dauby and Hardy 2012, Zhang 2012, Haegeman et al. 2013, Chao and Jost 2015, Willis and Bunge 2015, Zhang and Grabchak 2016, Mao et al. 2017), the intervals they provide are not all equivalent. To the best of our knowledge, only one of these approaches is widely used in practice, namely variations of the “confidence intervals” described by Chao and Jost 2015 (Chao and Shen 2003, Colwell et al. 2012, Chao et al. 2014, 2019, Chao and Jost 2015), and included in the popular R packages SpadeR (Chao et al. 2016) and iNEXT (Hsieh et al. 2016).
+Quantitative measures of the statistical uncertainty in estimates of Hill
+diversity ($D$)  are technically difficult to produce, and furthermore, the
+existing tools rely on a variety of statistical approaches with incompatible
+interpretations. Thus, while a number of recent publications provide
+quantitative interval estimates for community diversity (Dauby and Hardy 2012,
+Zhang 2012, Haegeman et al. 2013, Chao and Jost 2015, Willis and Bunge 2015,
+Zhang and Grabchak 2016, Mao et al. 2017), the intervals they provide are not
+all equivalent. To the best of our knowledge, only one of these approaches is
+widely used in practice, namely variations of the “confidence intervals”
+described by Chao and Jost 2015 (Chao and Shen 2003, Colwell et al. 2012, Chao
+et al. 2014, 2019, Chao and Jost 2015), and included in the popular R packages
+SpadeR (Chao et al. 2016) and iNEXT (Hsieh et al. 2016).
 
-The Chao and Jost 2015 confidence intervals were designed to indicate the statistical uncertainty for both sample Hill diversity and also for asymptotic Hill diversity estimates. The sampling distributions of Hill diversity estimates are poorly known, which makes defining confidence intervals for these quantities very difficult.  
+The Chao and Jost 2015 confidence intervals were designed to indicate the
+statistical uncertainty for both sample Hill diversity and also for asymptotic
+Hill diversity estimates. The sampling distributions of Hill diversity estimates
+are poorly known, which makes defining confidence intervals for these quantities
+very difficult.
 
-In this study, we describe a novel approach to assessing confidence intervals, and test the confidence intervals proposed by Chao and Jost (2015) using simulated species abundance distributions. First, we sample from simulated species abundance distributions to empirically describe the sampling distributions of Hill diversity estimates. Next, we ask whether the proposed intervals for both sample Hill diversities and for asymptotic Hill diversity estimates for the three most commonly used values for the scaling exponent $\ell$ (1, 0 and -1, corresponding to richness, Hill-Shannon diversity, and Hill-Simpson diversity) should be considered “confidence intervals,” (Casella and Berger) using tools we introduce as “slugplots” and “checkplots.”
+In this study, we describe a novel approach to assessing confidence intervals,
+and test the confidence intervals proposed by Chao and Jost (2015) using
+simulated species abundance distributions. First, we sample from simulated
+species abundance distributions to empirically describe the sampling
+distributions of Hill diversity estimates. Next, we ask whether the proposed
+intervals for both sample Hill diversities and for asymptotic Hill diversity
+estimates for the three most commonly used values for the scaling exponent
+$\ell$ (1, 0 and -1, corresponding to richness, Hill-Shannon diversity, and
+Hill-Simpson diversity) should be considered “confidence intervals,” (Casella
+and Berger) using tools we introduce as “slugplots” and “checkplots.”
 
 Specifically, we ask
  
-1.    How much sampling variability is there in sample Hill diversities and in Chao and Jost’s (2015) asymptotic Hill diversity estimators?
-1.    Does the method proposed by Chao and Jost (2015) generate valid confidence intervals that reflect this variability? If not, are these intervals consistently conservative or overconfident?
+1.    How much sampling variability is there in sample Hill diversities and in
+Chao and Jost’s (2015) asymptotic Hill diversity estimators?
+1.    Does the method proposed by Chao and Jost (2015) generate valid confidence
+intervals that reflect this variability? If not, are these intervals
+consistently conservative or overconfident?
 1.    Are the proposed intervals from this method biased high or low?
 1.    Does confidence interval performance depend on the species abundance distribution or choice of Hill diversity? 
 
@@ -189,7 +257,7 @@ normtests<- map_dfr(1:length(datNorm$mu), function(samp){
   return(data.frame(p, lower, upper, est, tm=datNorm[samp,1]))
 })
 
-rangePlot(normtests)
+rangePlot(normtests %>% filter(tm ==15))
 
 ```
 
