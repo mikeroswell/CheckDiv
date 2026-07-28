@@ -41,7 +41,15 @@ Rmd_files/checkplots_MS.html: Rmd_files/checkplots_MS.Rmd
 
 ## This is the piano plots and talks about random sampling across ties for discrete distributions
 Rmd_files/checkPlot_notes.html: Rmd_files/checkPlot_notes.Rmd
-	$(rmdh_r)
+
+######################################################################
+
+## JD: currently making a mess; trying to develop better knit rules and paths
+## No reason in my mind that products need to be in Rmd_files so moving away from that 
+
+## checkPlot_notes.github.md: Rmd_files/checkPlot_notes.Rmd
+%.github.md: Rmd_files/%.Rmd
+	$(rmdg_r)
 
 ######################################################################
 
