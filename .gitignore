@@ -288,6 +288,8 @@ cpdir/
 *.newdiff
 *.blame
 drop
+*.github.md
+*.github_files
 makestuff
 *.checkfile
 dropstuff
@@ -346,6 +348,8 @@ cpdir/
 *.newdiff
 *.blame
 drop
+*.github.md
+*.github_files
 makestuff
 *.checkfile
 dropstuff
@@ -404,6 +408,8 @@ cpdir/
 *.newdiff
 *.blame
 drop
+*.github.md
+*.github_files
 makestuff
 *.checkfile
 dropstuff
