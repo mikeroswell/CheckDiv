@@ -47,6 +47,10 @@ Rmd_files/checkPlot_notes.html: Rmd_files/checkPlot_notes.Rmd
 ## JD: currently making a mess; trying to develop better knit rules and paths
 ## No reason in my mind that products need to be in Rmd_files so moving away from that 
 
+######################################################################
+
+## Making md file nicely, but it doesn't render the figures on github? Is it supposed to?
+
 ## checkPlot_notes.export: Rmd_files/checkPlot_notes.Rmd
 Ignore += *.github.md *.github_files
 %.github.md: Rmd_files/%.Rmd
@@ -54,6 +58,10 @@ Ignore += *.github.md *.github_files
 
 %.export: %.github.md
 	$(MAKE) $*.github.md.op $*.github_files.opdir
+
+######################################################################
+
+%.pdf:
 
 ######################################################################
 
