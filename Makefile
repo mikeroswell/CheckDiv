@@ -12,6 +12,7 @@ vim_session:
 ######################################################################
 
 Sources += README.md notes.md
+Sources += .gitignore
 
 ## figures/ LICENSE Makefile README.md Rmd_files/
 
