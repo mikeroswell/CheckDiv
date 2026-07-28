@@ -48,6 +48,7 @@ Rmd_files/checkPlot_notes.html: Rmd_files/checkPlot_notes.Rmd
 ## No reason in my mind that products need to be in Rmd_files so moving away from that 
 
 ## checkPlot_notes.github.md: Rmd_files/checkPlot_notes.Rmd
+Ignore += *.github.md *.github_files
 %.github.md: Rmd_files/%.Rmd
 	$(rmdg_r)
 
